@@ -1,4 +1,4 @@
-# 🌿 Wildlife Field Notes
+# Wildlife Field Notes
 
 A mobile-friendly React app for logging animal sightings in the field. Built for ecology students and wildlife enthusiasts.
 
