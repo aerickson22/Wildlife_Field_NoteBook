@@ -17,7 +17,7 @@ A mobile-friendly React app for logging animal sightings in the field. Built for
 - React Router
 - React-Leaflet + OpenStreetMap (maps, free, no API key)
 - Browser Geolocation API (built-in, free)
-- localStorage (no backend needed)
+- Mongodb for date storage
 - UUID
 
 ## Getting Started
