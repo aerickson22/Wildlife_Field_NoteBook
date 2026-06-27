@@ -7,13 +7,13 @@ export function UserProvider({ children }) {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        const data = window.localStorage.getItem(USER_KEY);
+        const data = window.sessionStorage.getItem(USER_KEY);
         setUser(data ? JSON.parse(data) : null);
     }, []);
 
     useEffect(() => {
         if (user !== null) {
-            window.localStorage.setItem(USER_KEY, JSON.stringify(user));
+            window.sessionStorage.setItem(USER_KEY, JSON.stringify(user));
         }
     }, [user]);
 
