@@ -1,9 +1,9 @@
-import { Card, Form, Button, Alert, Spinner } from 'react-bootstrap';
+import { Card, Form, Button, Alert, Spinner, InputGroup } from 'react-bootstrap';
 import { NavLink, useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
 import { useUser } from './../utils/UserContext.jsx';
-import { PersonCircle, X } from 'react-bootstrap-icons';
+import { PersonCircle, X, Eye, EyeSlash  } from 'react-bootstrap-icons';
 import Layout from './../components/Layout.jsx';
 
 export default function Login(){
@@ -12,6 +12,7 @@ export default function Login(){
     const [ show, setShow ] = useState(false);
     const [ err, setErr ] = useState("");
     const { register, handleSubmit, formState: { errors } } = useForm();
+    const [ showPassword, setShowPassword ] = useState(false);
     const navigate = useNavigate();
 
     const toggleShow = () => setShow(!show);
@@ -70,13 +71,19 @@ export default function Login(){
                                     {errors.username && <p className="text-danger small mt-1">Username is required</p>}
                                 </Form.Group>
                                 <Form.Group className="mb-3" controlId="formPassword">
-                                    <Form.Label>Password</Form.Label>
-                                    <Form.Control
-                                    {...register("password", { required: true })}
-                                    type="password"
-                                    placeholder="Password"
-                                    />
-                                    {errors.password && <p className="text-danger small mt-1">Password is required</p>}
+                                    <Form.Label>Password*</Form.Label>
+                                    <InputGroup>
+                                        <Form.Control
+                                            {...register("password", { required: true, minLength: 8 })}
+                                            type={showPassword ? "text" : "password"}
+                                            placeholder="Password"
+                                        />
+                                        <Button variant="outline-secondary" onClick={() => setShowPassword(!showPassword)} tabIndex={-1}>
+                                            {showPassword ? <EyeSlash /> : <Eye />}
+                                        </Button>
+                                    </InputGroup>
+                                    {errors.password?.type === 'required' && <p className="text-danger small mt-1">Password is required</p>}
+                                    {errors.password?.type === 'minLength' && <p className="text-danger small mt-1">Password must be at least 8 characters</p>}
                                 </Form.Group>
                                 <Button variant="primary" type="submit" className="w-100 mb-3" disabled={loading}>
                                     {loading ? (

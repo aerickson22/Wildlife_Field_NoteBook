@@ -1,15 +1,19 @@
-import { Card, Form, Button, Alert, Spinner } from 'react-bootstrap';
+import { Card, Form, Button, Alert, Spinner, InputGroup } from 'react-bootstrap';
 import { NavLink, useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
-import { PersonCircle, X } from 'react-bootstrap-icons';
+import { PersonCircle, X, Eye, EyeSlash } from 'react-bootstrap-icons';
 import Layout from './../components/Layout.jsx';
 
 export default function Signup() {
     const [ loading, setLoading ] = useState(false);
     const [ show, setShow ] = useState(false);
+    const [ success, setSuccess ] = useState(false);
     const [ err, setErr ] = useState("");
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, handleSubmit, watch, formState: { errors } } = useForm();
+    const [ showPassword, setShowPassword ] = useState(false);
+    const [ showConfirmPassword, setShowConfirmPassword ] = useState(false);
+    const password = watch("password");
     const navigate = useNavigate();
 
     const onSubmit = async (data) => {
@@ -27,9 +31,9 @@ export default function Signup() {
                 setShow(true);
                 setLoading(false);
             } else {
-                alert("Account Successfully Created");
+                setSuccess(true);
                 setLoading(false);
-                navigate("/login");
+                setTimeout(() => navigate("/login"), 2000);
             }
         } catch (err) {
             setShow(true);
@@ -54,6 +58,9 @@ export default function Signup() {
                                     <X size={20} />
                                 </Button>
                             </Alert>
+                            <Alert show={success} variant="success" className="py-2">
+                                <p className="mb-0">Account successfully created! Redirecting to login...</p>
+                            </Alert>
                             <Form onSubmit={handleSubmit(onSubmit)}>
                                 <Form.Group className="mb-3" controlId="formUsername">
                                     <Form.Label>Username*</Form.Label>
@@ -75,16 +82,6 @@ export default function Signup() {
                                     {errors.email?.type === 'required' && <p className="text-danger small mt-1">Email is required</p>}
                                     {errors.email?.type === 'pattern' && <p className="text-danger small mt-1">A valid email is required</p>}
                                 </Form.Group>
-                                <Form.Group className="mb-3" controlId="formPassword">
-                                    <Form.Label>Password*</Form.Label>
-                                    <Form.Control
-                                        {...register("password", { required: true, minLength: 8 })}
-                                        type="password"
-                                        placeholder="Password"
-                                    />
-                                    {errors.password?.type === 'required' && <p className="text-danger small mt-1">Password is required</p>}
-                                    {errors.password?.type === 'minLength' && <p className="text-danger small mt-1">Password must be at least 8 characters</p>}
-                                </Form.Group>
                                 <Form.Group className="mb-3" controlId="formFirstName">
                                     <Form.Label>First Name*</Form.Label>
                                     <Form.Control
@@ -102,6 +99,36 @@ export default function Signup() {
                                         placeholder="Last Name"
                                     />
                                     {errors.lastName && <p className="text-danger small mt-1">Last name is required</p>}
+                                </Form.Group>
+                                <Form.Group className="mb-3" controlId="formPassword">
+                                    <Form.Label>Password*</Form.Label>
+                                    <InputGroup>
+                                        <Form.Control
+                                            {...register("password", { required: true, minLength: 8 })}
+                                            type={showPassword ? "text" : "password"}
+                                            placeholder="Password"
+                                        />
+                                        <Button variant="outline-secondary" onClick={() => setShowPassword(!showPassword)} tabIndex={-1}>
+                                            {showPassword ? <EyeSlash /> : <Eye />}
+                                        </Button>
+                                    </InputGroup>
+                                    {errors.password?.type === 'required' && <p className="text-danger small mt-1">Password is required</p>}
+                                    {errors.password?.type === 'minLength' && <p className="text-danger small mt-1">Password must be at least 8 characters</p>}
+                                </Form.Group>
+                                <Form.Group className="mb-3" controlId="formConfirmPassword">
+                                    <Form.Label>Confirm Password*</Form.Label>
+                                    <InputGroup>
+                                        <Form.Control
+                                            {...register("confirmPassword", { required: true, validate: value => value === password })}
+                                            type={showConfirmPassword ? "text" : "password"}
+                                            placeholder="Confirm Password"
+                                        />
+                                        <Button variant="outline-secondary" onClick={() => setShowConfirmPassword(!showConfirmPassword)} tabIndex={-1}>
+                                            {showConfirmPassword ? <EyeSlash /> : <Eye />}
+                                        </Button>
+                                    </InputGroup>
+                                    {errors.confirmPassword?.type === 'required' && <p className="text-danger small mt-1">Please confirm your password</p>}
+                                    {errors.confirmPassword?.type === 'validate' && <p className="text-danger small mt-1">Passwords do not match</p>}
                                 </Form.Group>
                                 <Button variant="primary" type="submit" className="w-100 mb-3" disabled={loading}>
                                     {loading ? (
