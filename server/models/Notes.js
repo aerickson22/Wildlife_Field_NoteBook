@@ -45,6 +45,11 @@ const NoteSchema = new Schema({
         type: Map,
         of: String,
     },
+    _user_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Users',
+        require: true
+    }
 });
 
 const Notes = mongoose.model("FieldLog", NoteSchema, "FieldLog");
