@@ -29,14 +29,6 @@ export default function LogSighting() {
                         <Card.Title className="mt-2 mb-0">Log A Field Note</Card.Title>
                     </Card.Header>
                     <Card.Body>
-                        <Alert show={show} variant="danger" className="d-flex justify-content-between align-items-center py-2">
-                            <p className="mb-0">{err}</p>
-                            <Button onClick={() => setShow(false)} variant="link" className="p-0 text-danger">
-                                    <X size={20} />
-                            </Button>
-                        </Alert>
-                        <Form onSubmit={handleSubmit(onSubmit)}>
-                        </Form>
                     </Card.Body>
                 </Card>
             </div>
